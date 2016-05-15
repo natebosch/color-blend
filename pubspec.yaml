@@ -1,0 +1,8 @@
+name: colorblend
+description: Find the resulting colors with an alpha applied on a background
+dependencies:
+  browser: ^0.10.0
+  angular2: 2.0.0-beta.17
+transformers:
+- angular2:
+    entry_points: web/main.dart
