@@ -1,8 +1,8 @@
 class Color {
-  final num r;
-  final num g;
-  final num b;
-  final num a;
+  final num red;
+  final num green;
+  final num blue;
+  final num alpha;
   factory Color(String input) {
     if (input.startsWith('0x')) {
       return new Color.fromHex(input);
@@ -15,56 +15,61 @@ class Color {
   factory Color.fromRgba(String input) {
     var rgba = input.substring(5, input.length - 1);
     var parts = rgba.split(',');
-    var red = int.parse(parts[0]);
-    var green = int.parse(parts[1]);
-    var blue = int.parse(parts[2]);
-    var alpha = 1;
+    var r = int.parse(parts[0]);
+    var g = int.parse(parts[1]);
+    var b = int.parse(parts[2]);
+    var a = 1;
     if (parts.length >= 4) {
-      alpha = double.parse(parts[3]);
+      a = double.parse(parts[3]);
     }
-    return new Color._(red, green, blue, alpha);
+    return new Color._(r, g, b, a);
   }
 
   factory Color.fromHex(String input) {
     var hex = input.substring(2);
     if (hex.length > 4) {
-      var red = int.parse(hex.substring(0, 2), radix: 16);
-      var green = int.parse(hex.substring(2, 4), radix: 16);
-      var blue = int.parse(hex.substring(4, 6), radix: 16);
-      var alpha = 1;
+      var r = int.parse(hex.substring(0, 2), radix: 16);
+      var g = int.parse(hex.substring(2, 4), radix: 16);
+      var b = int.parse(hex.substring(4, 6), radix: 16);
+      var a = 1;
       if (hex.length == 8) {
         var alphaHex = int.parse(hex.substring(6, 8), radix: 16);
-        alpha = 255 / alphaHex;
+        a = 255 / alphaHex;
       }
-      return new Color._(red, green, blue, alpha);
+      return new Color._(r, g, b, a);
     } else {
-      var red = int.parse('${hex[0]}${hex[0]}', radix: 16);
-      var green = int.parse('${hex[1]}${hex[1]}', radix: 16);
-      var blue = int.parse('${hex[2]}${hex[2]}', radix: 16);
-      var alpha = 1;
+      var r = int.parse('${hex[0]}${hex[0]}', radix: 16);
+      var g = int.parse('${hex[1]}${hex[1]}', radix: 16);
+      var b = int.parse('${hex[2]}${hex[2]}', radix: 16);
+      var a = 1;
       if (hex.length == 4) {
         var alphaHex = int.parse('${hex[3]}${hex[3]}', radix: 16);
-        alpha = 255 / alphaHex;
+        a = 255 / alphaHex;
       }
-      return new Color._(red, green, blue, alpha);
+      return new Color._(r, g, b, a);
     }
   }
 
-  Color._(this.r, this.g, this.b, this.a);
+  Color._(this.red, this.green, this.blue, this.alpha);
 
   Color onBackground(Color background) {
-    var alpha = a + background.a * (1 - a);
-    var red = ((1 - a) * background.r * background.a + a * r) / alpha;
-    var green = ((1 - a) * background.g * background.a + a * g) / alpha;
-    var blue = ((1 - a) * background.b * background.a + a * b) / alpha;
-    return new Color._(red, green, blue, alpha);
+    var a = alpha + background.alpha * (1 - alpha);
+    blend(c, bg) => ((1 - alpha) * background.alpha * bg + alpha * c) / a;
+    var r = blend(red, background.red);
+    var g = blend(green, background.green);
+    var b = blend(blue, background.blue);
+    return new Color._(r, g, b, a);
   }
 
   @override
-  String toString() =>
-      'rgba(${r.round()}, ${g.round()}, ${b.round()}, ${a.round()})';
+  String toString() {
+    var args =
+        [red, blue, green, alpha].map((value) => value.round()).join(',');
+    return 'rgba($args)';
+  }
 
   String toHexString() =>
-      '0x${r.round().toRadixString(16)}${g.round().toRadixString(16)}'
-      '${b.round().toRadixString(16)}${(a*255).round().toRadixString(16)}';
+      '0x${_toHex(red)}${_toHex(green)}${_toHex(blue)}${_toHex(alpha*255)}';
 }
+
+String _toHex(num value) => value.round().toRadixString(16);
