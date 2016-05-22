@@ -62,6 +62,9 @@ class Color {
 
   @override
   String toString() =>
+      'rgba(${r.round()}, ${g.round()}, ${b.round()}, ${a.round()})';
+
+  String toHexString() =>
       '0x${r.round().toRadixString(16)}${g.round().toRadixString(16)}'
       '${b.round().toRadixString(16)}${(a*255).round().toRadixString(16)}';
 }
