@@ -26,28 +26,16 @@ class Color {
   }
 
   factory Color.fromHex(String input) {
-    var hex = input.substring(2);
-    if (hex.length > 4) {
-      var r = int.parse(hex.substring(0, 2), radix: 16);
-      var g = int.parse(hex.substring(2, 4), radix: 16);
-      var b = int.parse(hex.substring(4, 6), radix: 16);
-      var a = 1;
-      if (hex.length == 8) {
-        var alphaHex = int.parse(hex.substring(6, 8), radix: 16);
-        a = 255 / alphaHex;
-      }
-      return new Color._(r, g, b, a);
-    } else {
-      var r = int.parse('${hex[0]}${hex[0]}', radix: 16);
-      var g = int.parse('${hex[1]}${hex[1]}', radix: 16);
-      var b = int.parse('${hex[2]}${hex[2]}', radix: 16);
-      var a = 1;
-      if (hex.length == 4) {
-        var alphaHex = int.parse('${hex[3]}${hex[3]}', radix: 16);
-        a = 255 / alphaHex;
-      }
-      return new Color._(r, g, b, a);
+    var hex = _canonicalHex(input.substring(2));
+    var r = int.parse(hex.substring(0, 2), radix: 16);
+    var g = int.parse(hex.substring(2, 4), radix: 16);
+    var b = int.parse(hex.substring(4, 6), radix: 16);
+    var a = 1;
+    if (hex.length == 8) {
+      var alphaHex = int.parse(hex.substring(6, 8), radix: 16);
+      a = 255 / alphaHex;
     }
+    return new Color._(r, g, b, a);
   }
 
   Color._(this.red, this.green, this.blue, this.alpha);
@@ -73,3 +61,12 @@ class Color {
 }
 
 String _toHex(num value) => value.round().toRadixString(16);
+
+/// Transforms a string with 1 or 2 digits per channel into a string with 2
+/// digits per channel.
+String _canonicalHex(String original) {
+  if (original.length > 4) {
+    return original;
+  }
+  return original.splitMapJoin('', onNonMatch: (part) => part * 2);
+}
