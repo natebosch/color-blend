@@ -18,7 +18,7 @@ class Color {
     var r = int.parse(parts[0]);
     var g = int.parse(parts[1]);
     var b = int.parse(parts[2]);
-    var a = 1;
+    num a = 1;
     if (parts.length >= 4) {
       a = double.parse(parts[3]);
     }
@@ -30,7 +30,7 @@ class Color {
     var r = int.parse(hex.substring(0, 2), radix: 16);
     var g = int.parse(hex.substring(2, 4), radix: 16);
     var b = int.parse(hex.substring(4, 6), radix: 16);
-    var a = 1;
+    num a = 1;
     if (hex.length == 8) {
       var alphaHex = int.parse(hex.substring(6, 8), radix: 16);
       a = 255 / alphaHex;

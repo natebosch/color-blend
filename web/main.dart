@@ -1,7 +1,6 @@
-import 'package:angular2/platform/browser.dart';
-
-import 'package:colorblend/app.dart';
+import 'package:angular/angular.dart';
+import 'package:colorblend/app.template.dart' as ng;
 
 main() {
-  bootstrap(ColorBlendApp);
+  runApp(ng.ColorBlendAppNgFactory);
 }
